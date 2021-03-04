@@ -1,0 +1,241 @@
+mainfunction: 0x555555557050
+
+cmp    r8, 0x1: 0x5555555580f0
+cmp    rax, 0x0: 0x5555555580fd --> jump --> 0x55555555810c
+
+jmp: 0x5555555580ea (xem kĩ đoạn này)
+
+check flag: 0x55555555819e
+
+r9 = 0x741d3fe6e51a7201 * rcx
+rax = 0x2e13cab8f2a6f201
+
+
+
+---------------------
+# new_loop
+rax = [rax] = 0x62
+swap(rax, rsi)
+swap(rax, rsi)
+rcx = rax = 0x62
+
+swap(rax, rsi) => rax = 0x61; rsi = 0x62
+swap(rax, rcx) =>rax = 0x62, rcx = 0x61
+swap(rax, rdx) => rax = 0x89d3607ac744b600 , rdx = 0x62
+
+pop rax => rax = 0x0000555555558144  →   pop rax
+swap(rax, rcx) => rax = 0x61, rcx = 0x0000555555558144  →   pop rax
+
+pop rax => rax =  0x0000555555558144  →   pop rax
+swap(rax, rdx) => rax = 0x62 ; rdx =  0x0000555555558144  →   pop rax
+
+breakpoint here 0x55555555819e: test rax, rax
+je     0x5555555581a7
+
+rax = rdx = 0x000055555555a6c0  →  0x0000555555558144  →   pop rax
+swap(rax, rcx) => [rax] = 0x0000555555558144  →   pop rax, [rcx] = 0x0000555555558144  →   pop rax
+
+rsp = rcx
+pop rax => [rax] = 0x75d2ce36d4573c03
+swap(rax, r15) =>rax = 0x75d2ce36d4573c03, [r15] = 0x75d2ce36d4573c03 
+swap(rax, r15) => [rax] = 0x75d2ce36d4573c03, r15 = 0x75d2ce36d4573c03
+
+rcx = rax => [rcx] = 0x75d2ce36d4573c03
+swap(rax, r15) =>rax = 0x75d2ce36d4573c03, [r15] = 0x75d2ce36d4573c03
+swap(rax, rcx) => [rax] = 0x75d2ce36d4573c03,rcx = 0x75d2ce36d4573c03
+
+rax = [rax] = 0x75d2ce36d4573c03
+swap(rax, r15) => [rax] = 0x75d2ce36d4573c03, r15 = 0x75d2ce36d4573c03
+
+pop rax => rax = 0x1
+swap(rax, r9) => rax = 0x741d3fe6e51a7201, r9 = 0x1
+swap(rax, rsi) => rax = 0x62, rsi = 0x741d3fe6e51a7201
+rcx = rax = 0x62
+
+swap(rax, rsi) =>rax = 0x741d3fe6e51a7201, rsi = 0x62
+swap(Rax, rcx) => rax = 0x62, rcx = 0x741d3fe6e51a7201
+swap(rax, r8) => rax = 0x1, r8 = 0x741d3fe6e51a7201
+
+swap(rax, r15) => rax = 0x75d2ce36d4573c03, r15 = 0x1
+rcx = rax = 0x75d2ce36d4573c03
+
+swap(rax, r15) => rax = 0x1, r15 = 0x75d2ce36d4573c03
+swap(rax, rcx)
+swap(rax, rcx)
+
+
+
+
+
+---------------
+
+
+rax = 0
+swap(rax, rdi) 
+pop rax
+
+swap(rax, rsi)
+
+
+num = 0xabcdef9876543201
+r9 = 0x1
+for c in flag:
+    r8 = c >> 1
+Label1:
+
+    if r8 == 0 -> j la
+    if r8 == 1 -> j lb
+
+    if r8 & 1 == 0:
+    la:
+        num = num^2
+    else:
+    lb:
+        r9 *= num
+        num = num^2
+    r8 = r8 >> 1
+    goto Label
+
+rax = 0x2e13cab8f2a6f201
+rcx = 0x50232967c8c8001
+
+swap(rax, r15)
+swap(rax, rbp)
+rax = rcx
+swap(rax, rbp)
+swap(rax, rcx)
+
+getvalue: rax = 0xa7c0aac235e24401
+swap(rax, rdx) => rdx = 0xa7c0aac235e24401; rax = 0x245916bfa63bd7a
+swap(rax, r15) => r15 = 0x245916bfa63bd7a; rax = 0x2e13cab8f2a6f201
+rcx = rax = 0x2e13cab8f2a6f201
+
+swap(rax, r15) => rax = 0x245916bfa63bd7a; r15 = 0x2e13cab8f2a6f201
+swap(rax, rcx) => rax = 0x2e13cab8f2a6f201; rcx = 0x245916bfa63bd7a
+swap(rax, rcx) => rax = 0x245916bfa63bd7a, rcx = 0x2e13cab8f2a6f201
+swap(rax, rdx) => rax = 0xa7c0aac235e24401; rdx = 0x245916bfa63bd7a
+rax = rax ^ rcx = 0xa7c0aac235e24401 ^ 0x2e13cab8f2a6f201 = 0x89d3607ac744b600
+
+swap(rax, rdx) => rax = 0x245916bfa63bd7a ; rdx = 0x89d3607ac744b600
+swap(rax, rdx) => rax = 0x89d3607ac744b600; rdx = 0x245916bfa63bd7a
+rcx = rax = 0x89d3607ac744b600
+
+swap(rax, rdx) => rax = 0x245916bfa63bd7a, rdx = 0x89d3607ac744b600
+swap(rax, rcx) => rax = 0x89d3607ac744b600; rcx = 0x245916bfa63bd7a
+swap(rax, rcx) => rax = 0x245916bfa63bd7a; rcx = 0x89d3607ac744b600
+
+swap(rax, rbx) => rax = 0x0 ; rbx = 0x245916bfa63bd7a
+
+rax += rcx = 0x89d3607ac744b600
+
+swap(rax, rbx) => rax = 0x245916bfa63bd7a; rbx = 0x89d3607ac744b600
+pop rax => rax = 0x00007ffff7ff7100  →  0xabcdef9876543201
+swap(rax, r14)=> r14 = 0x00007ffff7ff7100  →  0xabcdef9876543201
+
+pop rax => rax = 0x5bc1048e26f1ce02
+swap(rax, r13) 
+swap(rax, r13)
+
+rcx = rax = 0x5bc1048e26f1ce02
+swap(rax, r13) => r13 = 0x5bc1048e26f1ce02; rax = 1
+swap(rax, rcx)
+swap(rax, rcx)
+
+swap(rax, r15) => rax = 0x2e13cab8f2a6f201; r15 = 1
+rax = rax ^ rcx = 0x2e13cab8f2a6f201 ^ 0x5bc1048e26f1ce02  = 0x75d2ce36d4573c03
+
+swap(rax, r15)
+swap(rax, r15)
+
+rcx = rax = 0x75d2ce36d4573c03
+
+swap(rax, r15) => rax = 1; r15 = 0x75d2ce36d4573c03
+swap(rax, r14) => [rax] = 0xabcdef9876543201; [r14] = 1
+[rax] = rcx => [rax] = 0x75d2ce36d4573c03
+
+swap(rax, r14) => [rax] = 1; [r14] = 0x75d2ce36d4573c03
+swap(rax, rdi) => [rax] = "abc"; [rdi] = 1
+
+rax += [rsp]
+rsp += 0x8
+
+swap(rax, rdi) => rax = 1, [rdi] = "bc"
+swap(rax, rbp) => rbp = 1
+rax += [rsp]
+rsp += 0x8
+swap(rax, rbp)
+
+pop rax => [rax] =  0x0000555555558056  →   xor rax, rdi
+
+
+
+swap(rax, rcx) => rax = 0x75d2ce36d4573c03
+rsp = rcx
+
+swap(rax, rdi) => [rax] = 0; rdi = 0x75d2ce36d4573c03
+rcx = rax = 0
+
+swap(rax, rdi) => rax = 0x75d2ce36d4573c03; [rdi] = 0
+swap(rax, rcx) => [rax] = 0; rcx = 0x75d2ce36d4573c03
+
+
+goto new_loop
+
+
+
+
+
+
+
+...
+rax = rax - rcx = 1
+
+...
+rax = rax ^ rcx = len(flag) ^ 0x22 = 0x23
+rcx = rax = 0x23
+rax += rcx = 0x89d3607ac744b600 + 0x23 = 0x89d3607ac744b623
+
+
+
+(0 - 0x23)
+
+0x89d3607ac744b623
+0x10000000000000000
+ln((0x10000000000000000 - (n ^ 0x22)) ^ 0xa7c0aac235e24401) / ln(0xabcdef9876543201) = x
+
+
+n = len(flag)
+
+rcx = 0xabcdef9876543201
+r9 = 0x1
+
+for i in range(n):
+    char = flag[i]
+Label1:
+
+    if r8 == 0 -> j la
+    if r8 == 1 -> j lb
+
+    if r8 & 1 == 0:
+    la:
+        rcx = rcx**2
+    else:
+    lb:
+        r9 *= rcx
+        rcx = rcx**2
+    r8 = r8 >> 1
+    goto Label
+
+----------
+rax = 0xd88c32a84f83f89
+rcx = 0x7eff97e8bfc3bd01
+rdx = 0x3a3c91df9529fd91
+
+
+
+xor = 0xfbc27a78732cd5c1
+
+
+
+
+
