@@ -1,6 +1,15 @@
-import gdb
-import string
 
+#
+#       PEDA - Python Exploit Development Assistance for GDB
+#
+#       Copyright (C) 2012 Long Le Dinh <longld at vnsecurity.net>
+#
+#       License: see LICENSE file for details
+#
+
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
 
 # change below settings to match your needs
 ## BEGIN OF SETTINGS ##
@@ -33,6 +42,8 @@ OPTIONS = {
     "_teefd"    : ("", "internal use only for tracelog/crashlog writing")
 }
 
+## END OF SETTINGS ##
+
 class Option(object):
     """
     Class to access global options of PEDA commands and functions
@@ -43,6 +54,23 @@ class Option(object):
         """option format: name = (value, 'help message')"""
         pass
 
+
+    @staticmethod
+    def reset():
+        """reset to default options"""
+        Option.options = OPTIONS.copy()
+        return True
+
+    @staticmethod
+    def show(name=""):
+        """display options"""
+        result = {}
+        for opt in Option.options:
+            if name in opt and not opt.startswith("_"):
+                result[opt] = Option.options[opt][0]
+        return result
+
+    @staticmethod
     def get(name):
         """get option"""
         if name in Option.options:
@@ -50,80 +78,21 @@ class Option(object):
         else:
             return None
 
+    @staticmethod
+    def set(name, value):
+        """set option"""
+        if name in Option.options:
+            Option.options[name] = (value, Option.options[name][1])
+            return True
+        else:
+            return False
 
+    @staticmethod
+    def help(name=""):
+        """display help info of options"""
+        result = {}
+        for opt in Option.options:
+            if name in opt and not opt.startswith("_"):
+                result[opt] = Option.options[opt][1]
+        return result
 
-
-def tmpfile(pref="peda-", is_binary_file=False):
-    """Create and return a temporary file with custom prefix"""
-
-    mode = 'w+b' if is_binary_file else 'w+'
-    return tempfile.NamedTemporaryFile(mode=mode, prefix=pref)
-
-def execute_redirect(gdb_command, silent=False):
- 
-    result = None
-    #init redirection
-    if silent:
-        logfd = open(os.path.devnull, "r+")
-    else:
-        logfd = tmpfile()
-    logname = logfd.name
-    gdb.execute('set logging off') # prevent nested call
-    gdb.execute('set height 0') # disable paging
-    gdb.execute('set logging file %s' % logname)
-    gdb.execute('set logging overwrite on')
-    gdb.execute('set logging redirect on')
-    gdb.execute('set logging on')
-    try:
-        gdb.execute(gdb_command)
-        gdb.flush()
-        gdb.execute('set logging off')
-        if not silent:
-            logfd.flush()
-            result = logfd.read()
-        logfd.close()
-    except Exception as e:
-        gdb.execute('set logging off') #to be sure
-        if Option.get("debug") == "on":
-            msg('Exception (%s): %s' % (gdb_command, e), "red")
-            traceback.print_exc()
-        logfd.close()
-    if Option.get("verbose") == "on":
-        msg(result)
-    return result
- 
- 
-class bp(gdb.Breakpoint):
-    def stop(self):
-        global encode, idx, check
-        if idx % 2 == 0:
-            x = execute_redirect("x/s $rax")
-            encode = x.split(":")[0]
-            check[int(idx / 2)] = int(encode, 16)
-        idx += 1
-        
- 
- 
-bp("*0x5555555580d9")
-
-
- 
-def main():
-    global encode, idx, check
-    code = ["_"] * 0x22
-    for j in range(0x22):
-        for i in string.printable:
-            code[j] = i
-            if i == "\"" or i == "`" or i == "'" or i == "\\":
-                code[j] = "\\" + i 
-
-            idx = 0
-            check = [-1]*0x23
-
-            print("USING:",''.join(code) + '\n')
-            gdb.execute("run < <(python -c \"print '" + ''.join(code) + "'\")")
-
-            if check[j] == 0:
-                break
-
-main()
